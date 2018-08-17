@@ -113,10 +113,12 @@ struct async_message {
     if (headers_.has_exception())
       boost::rethrow_exception(headers_.get_exception_ptr());
     headers_container_type raw_headers = headers_.get();
-    raw_headers.insert(added_headers.begin(), added_headers.end());
-    for (string_type const& key : removed_headers) {
-      raw_headers.erase(key);
-    }
+
+    // XXX BIG FAT HACK to make this work on msvc2017 + clang-cl
+    //    raw_headers.insert(added_headers.begin(), added_headers.end());
+    //    for (string_type const& key : removed_headers) {
+    //      raw_headers.erase(key);
+    //    }
     retrieved_headers_ = raw_headers;
     return *retrieved_headers_;
   }
